@@ -1,6 +1,11 @@
-[ -d ~/.fzf ] || {
-    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-    ~/.fzf/install --key-bindings --completion --no-update-rc
-} > /dev/null
+FZF=$(which fzf) || FZF=
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+if [[ -z "$FZF" ]]; then
+    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+    ~/.fzf/install --key-bindings --completion --no-update-rc &> /dev/null
+elif [[ ! -f ~/.fzf.zsh ]]; then
+  INSTALL=$(cd $(dirname $(readlink -f $FZF))/..; pwd)/install
+  $INSTALL --key-bindings --completion --no-update-rc &> /dev/null
+fi
+
+source ~/.fzf.zsh
